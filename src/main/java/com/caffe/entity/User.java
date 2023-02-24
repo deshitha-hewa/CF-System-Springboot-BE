@@ -1,4 +1,4 @@
-package com.caffe.model;
+package com.caffe.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -26,7 +26,7 @@ public class User implements Serializable {
     private Integer id;
 
     @NotBlank(message = "User name must no be null")
-    @Size(min=3,message = "User name atleasst 3 characters")
+    @Size(min=3,message = "User name at least 3 characters")
     private String name;
 
     @NotBlank(message = "Contact Number must no be null")
@@ -41,10 +41,10 @@ public class User implements Serializable {
     private String password;
 
     @NotBlank(message = "User status must no be null")
-    private String status;
+    private String status="approved";
 
     @Column(name="userRole")
-    private String role;
+    private String role="user";
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp

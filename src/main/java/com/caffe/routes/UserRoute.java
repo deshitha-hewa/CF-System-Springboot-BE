@@ -1,4 +1,4 @@
-package routes;
+package com.caffe.routes;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Map;
 
-@RequestMapping(path="/user")
+@RequestMapping(path="api/v1/user")
 public interface UserRoute {
 
     @PostMapping(path="/signup")
