@@ -16,13 +16,14 @@ public class UserController implements UserRoute {
 
     @Autowired
     UserService userService;
+
     @Override
     public ResponseEntity<String> signup(Map<String, String> requestMap) {
         try {
             return userService.signUp(requestMap);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return CafeUtils.getResponseEntity(500, CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -25,30 +25,31 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
     @Override
     public ResponseEntity<String> signUp(Map<String, String> requestMap) {
-        log.info("Onside signup {}",requestMap);
+        log.info("Onside signup {}", requestMap);
 
-        try{
-            if(validateSignUpMap(requestMap)){
-                User user=userRepo.findByEmailId(requestMap.get("email"));
-                if(Objects.isNull(user)){
-                    userRepo.save(modelMapper.map(requestMap,User.class));
-                    return CafeUtils.getResponseEntity(200,"Successfully Registered",HttpStatus.OK);
-                }else {
-                    return CafeUtils.getResponseEntity(401,"Email already exist",HttpStatus.BAD_REQUEST);
+        try {
+            if (validateSignUpMap(requestMap)) {
+                User user = userRepo.findByEmailId(requestMap.get("email"));
+                if (Objects.isNull(user)) {
+                    userRepo.save(modelMapper.map(requestMap, User.class));
+                    return CafeUtils.getResponseEntity(200, true, "Successfully Registered", HttpStatus.OK);
+                } else {
+                    return CafeUtils.getResponseEntity(401, false, "Email already exist", HttpStatus.BAD_REQUEST);
                 }
-            }else {
-                return CafeUtils.getResponseEntity(400, CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
+            } else {
+                return CafeUtils.getResponseEntity(400, false, CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return CafeUtils.getResponseEntity(500, CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private boolean validateSignUpMap(Map<String,String> requestMap){
-        if(requestMap.containsKey("name")&& requestMap.containsKey("contactNumber") && requestMap.containsKey("email") && requestMap.containsKey("password")){
+    private boolean validateSignUpMap(Map<String, String> requestMap) {
+        if (requestMap.containsKey("name") && requestMap.containsKey("contactNumber") && requestMap.containsKey("email") && requestMap.containsKey("password")) {
             return true;
         }
         return false;
