@@ -1,5 +1,6 @@
 package com.caffe.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -12,6 +13,8 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+
+// ########################## USER MODEL ##########################
 
 @Data
 @Entity
@@ -38,10 +41,11 @@ public class User implements Serializable {
     private String email;
 
     @NotNull(message = "Password must not be null")
+    @JsonIgnore
     private String password;
 
     @NotBlank(message = "User status must no be null")
-    private String status="approved";
+    private String status="true";
 
     @Column(name="userRole")
     private String role="user";

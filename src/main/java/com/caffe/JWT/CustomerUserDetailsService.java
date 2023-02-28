@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Objects;
 
+// ########################## CHECK USER IN DB AND SEND DATA FOR AUTHENTICATION ##########################
+
 @Slf4j
 @Service
 public class CustomerUserDetailsService implements UserDetailsService {
@@ -20,12 +22,15 @@ public class CustomerUserDetailsService implements UserDetailsService {
     UserRepository userRepository;
 
     private com.caffe.entity.User userDetail;
+
+    // Load user
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("Inside loadUserByUsername {}",username);
         userDetail =userRepository.findByEmailId(username);
-        if(!Objects.isNull(userDetail))
-            return new User(userDetail.getEmail(),userDetail.getPassword(),new ArrayList<>());
+        if(!Objects.isNull(userDetail)) {
+            return new User(userDetail.getEmail(), userDetail.getPassword(), new ArrayList<>());
+        }
         else
             throw  new UsernameNotFoundException("User not found");
     }

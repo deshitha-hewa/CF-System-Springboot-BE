@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+// ########################## USER CUSTOM QUERIES ##########################
+
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
 
-//    User findByEmailId(@Param("email") String email);
+    // User findByEmailId(@Param("email") String email);
     @Query(value = "SELECT * FROM User WHERE email=?1",nativeQuery = true)
     User findByEmailId(@Param("email") String email);
 }

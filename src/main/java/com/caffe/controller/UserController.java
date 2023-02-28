@@ -11,12 +11,15 @@ import com.caffe.routes.UserRoute;
 
 import java.util.Map;
 
+// ########################## USER FUNCTION CONTROLLER ##########################
+
 @RestController
 public class UserController implements UserRoute {
 
     @Autowired
     UserService userService;
 
+    // SIGNUP CONTROLLER
     @Override
     public ResponseEntity<String> signup(Map<String, String> requestMap) {
         try {
@@ -24,6 +27,17 @@ public class UserController implements UserRoute {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG,null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // LOGIN CONTROLLER
+    @Override
+    public ResponseEntity<String> login(Map<String, String> requestMap) {
+        try{
+            return userService.login(requestMap);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG,null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

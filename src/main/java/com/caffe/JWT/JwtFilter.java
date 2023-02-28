@@ -25,9 +25,13 @@ public class JwtFilter extends OncePerRequestFilter {
     private CustomerUserDetailsService service;
 
     Claims claims=null;
+
     private String userName=null;
+
+    // Header token validation
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+
         if(httpServletRequest.getServletPath().matches(("/user/login | /user/sigup | /user/forgotPassword"))){
             filterChain.doFilter(httpServletRequest,httpServletResponse);
         }else {
@@ -51,12 +55,17 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(httpServletRequest,httpServletResponse);
         }
     }
+
+    // Check user role is admin
     public boolean isAdmin(){
         return "admin".equalsIgnoreCase((String) claims.get("role"));
     }
+
+    // Check user role is user
     public boolean isUser(){
         return "user".equalsIgnoreCase((String) claims.get("role"));
     }
+
     public String getCurrentUser(){
         return userName;
     }
