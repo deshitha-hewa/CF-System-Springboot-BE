@@ -33,4 +33,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     // Get all admin
     @Query(value = "SELECT email FROM User WHERE user_role='admin'", nativeQuery = true)
     List<String> getAllAdmin();
+
+    // Find Email
+    User findByEmail(String email);
 }

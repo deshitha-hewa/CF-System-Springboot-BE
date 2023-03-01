@@ -27,4 +27,12 @@ public interface UserRoute {
     // UPDATE USER STATUS FOR ADMIN
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<String> updateUserStatus(@RequestBody(required = true) Map<String, Boolean> requestMap, @PathVariable Long id);
+
+    // CHECK TOKEN
+    @GetMapping(path = "/checkToken")
+    ResponseEntity<String> checkToken();
+
+    // CHANGE PASSWORD
+    @PutMapping(path = "/changePassword")
+    ResponseEntity<String> changePassword(@RequestBody Map<String,String> requestMap);
 }

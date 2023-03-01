@@ -15,4 +15,8 @@ public interface UserService {
     ResponseEntity<String> getAllUsers();
 
     ResponseEntity<String> updateUserStatus(Map<String, Boolean> requestMap, Long id);
+
+    ResponseEntity<String> checkToken();
+
+    ResponseEntity<String> changePassword(Map<String, String> requestMap);
 }

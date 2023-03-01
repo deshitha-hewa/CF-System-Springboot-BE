@@ -13,4 +13,6 @@ public class CafeConstants {
     public static final String DATA_FOUND="Data found";
     public static final String USER_STATUS_UPDATE_SUCCESS="User status updated successfully";
     public static final String USERID_NOT_EXIST="User id doesn't exist";
+    public static final String OLD_PASSWORD_INCORRECT="Your old password was entered incorrectly. Please try again";
+    public static final String PASSWORD_UPDATE_SUCCESS="Password changed successfully";
 }

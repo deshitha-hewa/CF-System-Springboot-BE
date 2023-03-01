@@ -164,4 +164,32 @@ public class UserServiceImpl implements UserService {
             emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account disabled", "USER:- " + userEmail + "\n is disabled by \nADMIN: " + jwtFilter.getCurrentUser(), allAdmin);
         }
     }
+
+    // CHECK TOKEN
+    @Override
+    public ResponseEntity<String> checkToken() {
+        return CafeUtils.getResponseEntity(200, true, CafeConstants.USER_STATUS_UPDATE_SUCCESS, new ArrayList<>(), HttpStatus.OK);
+    }
+
+    // UPDATE PASSWORD
+    @Override
+    public ResponseEntity<String> changePassword(Map<String, String> requestMap) {
+        try {
+            User user = userRepo.findByEmail(jwtFilter.getCurrentUser());
+            if(!user.equals(null)){
+                // Check old password
+                if(user.getPassword().equals(requestMap.get("oldPassword"))){
+                    user.setPassword(requestMap.get("newPassword"));
+                    userRepo.save(user);
+                    return CafeUtils.getResponseEntity(200, true, CafeConstants.PASSWORD_UPDATE_SUCCESS, new ArrayList<>(), HttpStatus.OK);
+
+                }
+                return CafeUtils.getResponseEntity(400, false, CafeConstants.OLD_PASSWORD_INCORRECT, new ArrayList<>(), HttpStatus.BAD_REQUEST);
+            }
+            return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
