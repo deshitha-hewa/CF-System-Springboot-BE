@@ -35,4 +35,8 @@ public interface UserRoute {
     // CHANGE PASSWORD
     @PutMapping(path = "/changePassword")
     ResponseEntity<String> changePassword(@RequestBody Map<String,String> requestMap);
+
+    // FORGOT PASSWORD
+    @PutMapping(path = "/fogotPassword")
+    ResponseEntity<String> fogotPassword(@RequestBody Map<String,String> requestMap);
 }

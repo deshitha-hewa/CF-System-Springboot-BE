@@ -89,5 +89,16 @@ public class UserController implements UserRoute {
         return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // FORGOT PASSWORD
+    @Override
+    public ResponseEntity<String> fogotPassword(Map<String, String> requestMap) {
+        try {
+            return userService.fogotPassword(requestMap);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 
 }

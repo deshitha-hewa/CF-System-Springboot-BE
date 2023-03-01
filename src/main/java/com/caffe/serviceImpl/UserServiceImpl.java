@@ -9,6 +9,7 @@ import com.caffe.repository.UserRepository;
 import com.caffe.service.UserService;
 import com.caffe.utils.CafeUtils;
 import com.caffe.utils.EmailUtils;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -188,6 +189,24 @@ public class UserServiceImpl implements UserService {
             }
             return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // FORGOT PASSWORD
+    @Override
+    public ResponseEntity<String> fogotPassword(Map<String, String> requestMap) {
+        try {
+            User user=userRepo.findByEmail(requestMap.get("email"));
+
+            if(!Objects.isNull(user) && !Strings.isNullOrEmpty(user.getEmail()))
+                System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"+user);
+
+                emailUtils.forgotMail(user.getEmail(),"Credentials by Cafe Management System" ,user.getPassword());
+
+            return CafeUtils.getResponseEntity(200, true, CafeConstants.CHECK_EMAIL_CREDENTIALS, new ArrayList<>(), HttpStatus.OK);
+        }catch (Exception ex){
             ex.printStackTrace();
         }
         return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);

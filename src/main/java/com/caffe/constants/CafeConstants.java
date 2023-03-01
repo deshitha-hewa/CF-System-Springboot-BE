@@ -15,4 +15,5 @@ public class CafeConstants {
     public static final String USERID_NOT_EXIST="User id doesn't exist";
     public static final String OLD_PASSWORD_INCORRECT="Your old password was entered incorrectly. Please try again";
     public static final String PASSWORD_UPDATE_SUCCESS="Password changed successfully";
+    public static final String CHECK_EMAIL_CREDENTIALS="Check your email for credentials";
 }

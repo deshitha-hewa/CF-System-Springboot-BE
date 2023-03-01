@@ -47,7 +47,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf().disable().cors().disable().authorizeHttpRequests()
-                .requestMatchers("/user/login", "/user/signup", "/user/forgotPassword").permitAll()
+                .requestMatchers("/user/login", "/user/signup", "/user/fogotPassword").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
