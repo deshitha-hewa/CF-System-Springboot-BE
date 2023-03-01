@@ -1,6 +1,7 @@
 package com.caffe.serviceImpl;
 
 import com.caffe.JWT.CustomerUserDetailsService;
+import com.caffe.JWT.JwtFilter;
 import com.caffe.JWT.JwtUtil;
 import com.caffe.constants.CafeConstants;
 import com.caffe.entity.User;
@@ -17,6 +18,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -39,6 +42,9 @@ public class UserServiceImpl implements UserService {
     JwtUtil jwtUtil;
 
     @Autowired
+    JwtFilter jwtFilter;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     // SIGNUP METHOD IMPLEMENTATION
@@ -52,20 +58,20 @@ public class UserServiceImpl implements UserService {
                 User user = userRepo.findByEmailId(requestMap.get("email"));
 
                 if (Objects.isNull(user)) {
+                    // log.info("Onside login {}", user);
                     // Map body with model
-                    User user1 =userRepo.save(modelMapper.map(requestMap, User.class));
-//                    user1.setPassword("");
-                    return CafeUtils.getResponseEntity(200, true, CafeConstants.REG_SUCCESS,user1, HttpStatus.OK);
+                    User user1 = userRepo.save(modelMapper.map(requestMap, User.class));
+                    return CafeUtils.getResponseEntity(200, true, CafeConstants.REG_SUCCESS, user1, HttpStatus.OK);
                 } else {
-                    return CafeUtils.getResponseEntity(401, false, CafeConstants.EMAIL_EXIST,null, HttpStatus.BAD_REQUEST);
+                    return CafeUtils.getResponseEntity(401, false, CafeConstants.EMAIL_EXIST, null, HttpStatus.BAD_REQUEST);
                 }
             } else {
-                return CafeUtils.getResponseEntity(400, false, CafeConstants.INVALID_DATA,null, HttpStatus.BAD_REQUEST);
+                return CafeUtils.getResponseEntity(400, false, CafeConstants.INVALID_DATA, null, HttpStatus.BAD_REQUEST);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG,null, HttpStatus.INTERNAL_SERVER_ERROR);
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // VALIDATE SIGNUP INPUTS
@@ -86,15 +92,29 @@ public class UserServiceImpl implements UserService {
                 // Check user is approved or not
                 if (customerUserDetailsService.getUserDetail().getStatus().equalsIgnoreCase("true")) {
                     return CafeUtils.getTokenResponse(jwtUtil.generateToken(customerUserDetailsService.getUserDetail().getEmail(), customerUserDetailsService.getUserDetail().getRole()), HttpStatus.BAD_REQUEST);
-//                    return new ResponseEntity<String>("{\"token\":\"" + jwtUtil.generateToken(customerUserDetailsService.getUserDetail().getEmail(), customerUserDetailsService.getUserDetail().getRole()) + "\"}", HttpStatus.OK);
-                }else {
-                    return CafeUtils.getResponseEntity(400, false, CafeConstants.WAIT_ADMIN_APPROVAL,null, HttpStatus.BAD_REQUEST);
+                } else {
+                    return CafeUtils.getResponseEntity(400, false, CafeConstants.WAIT_ADMIN_APPROVAL, null, HttpStatus.BAD_REQUEST);
                 }
             }
         } catch (Exception ex) {
             log.error("{}", ex);
             ex.printStackTrace();
         }
-        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG,null, HttpStatus.INTERNAL_SERVER_ERROR);
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> getAllUsers() {
+        try {
+            if (jwtFilter.isAdmin()) {
+                List<User> user=  userRepo.getAllUser();
+                return CafeUtils.getResponseEntity(200, true, CafeConstants.DATA_FOUND, user, HttpStatus.OK);
+            } else {
+                return CafeUtils.getResponseEntity(401, false, CafeConstants.NOT_AUTHORIZED, new ArrayList<>(), HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

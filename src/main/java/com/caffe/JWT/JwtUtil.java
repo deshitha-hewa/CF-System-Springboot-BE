@@ -16,7 +16,7 @@ import java.util.function.Function;
 @Service
 public class JwtUtil {
 
-    private String ACCESS_TOKEN_SECRET = "534a1297a39e2da0a2f3abe03218425cfed1e83b23f3742a6a19a39de1abfd7d6a9fbca64555a8d2544a154f622c39be356f5464a32ae2e65aa58f042db98661";
+    private String ACCESS_TOKEN_SECRET = "ddthilindra";
 
     // Get data from token
     public <T> T extractClaims(String token, Function<Claims, T> claimsResolver) {

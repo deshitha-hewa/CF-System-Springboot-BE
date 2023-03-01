@@ -47,7 +47,7 @@ public class User implements Serializable {
     @NotBlank(message = "User status must no be null")
     private String status="true";
 
-    @Column(name="userRole")
+    @Column(name="user_role")
     private String role="user";
 
     @Column(name = "created_at", nullable = false, updatable = false)

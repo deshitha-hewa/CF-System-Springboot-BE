@@ -1,6 +1,7 @@
 package com.caffe.controller;
 
 import com.caffe.constants.CafeConstants;
+import com.caffe.entity.User;
 import com.caffe.service.UserService;
 import com.caffe.utils.CafeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import com.caffe.routes.UserRoute;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 // ########################## USER FUNCTION CONTROLLER ##########################
@@ -40,4 +43,16 @@ public class UserController implements UserRoute {
         }
         return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG,null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @Override
+    public ResponseEntity getAllUsers() {
+        try{
+            return userService.getAllUsers();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG,null, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
 }
