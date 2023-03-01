@@ -18,10 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 // ########################## USER BUSINESS LOGICS IMPLEMENTATION ##########################
 
@@ -63,15 +60,15 @@ public class UserServiceImpl implements UserService {
                     User user1 = userRepo.save(modelMapper.map(requestMap, User.class));
                     return CafeUtils.getResponseEntity(200, true, CafeConstants.REG_SUCCESS, user1, HttpStatus.OK);
                 } else {
-                    return CafeUtils.getResponseEntity(401, false, CafeConstants.EMAIL_EXIST, null, HttpStatus.BAD_REQUEST);
+                    return CafeUtils.getResponseEntity(401, false, CafeConstants.EMAIL_EXIST, new ArrayList<>(), HttpStatus.BAD_REQUEST);
                 }
             } else {
-                return CafeUtils.getResponseEntity(400, false, CafeConstants.INVALID_DATA, null, HttpStatus.BAD_REQUEST);
+                return CafeUtils.getResponseEntity(400, false, CafeConstants.INVALID_DATA, new ArrayList<>(), HttpStatus.BAD_REQUEST);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // VALIDATE SIGNUP INPUTS
@@ -90,31 +87,62 @@ public class UserServiceImpl implements UserService {
             Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestMap.get("email"), requestMap.get("password")));
             if (auth.isAuthenticated()) {
                 // Check user is approved or not
-                if (customerUserDetailsService.getUserDetail().getStatus().equalsIgnoreCase("true")) {
+                if (customerUserDetailsService.getUserDetail().getStatus().equals(true)) {
                     return CafeUtils.getTokenResponse(jwtUtil.generateToken(customerUserDetailsService.getUserDetail().getEmail(), customerUserDetailsService.getUserDetail().getRole()), HttpStatus.BAD_REQUEST);
                 } else {
-                    return CafeUtils.getResponseEntity(400, false, CafeConstants.WAIT_ADMIN_APPROVAL, null, HttpStatus.BAD_REQUEST);
+                    return CafeUtils.getResponseEntity(400, false, CafeConstants.WAIT_ADMIN_APPROVAL, new ArrayList<>(), HttpStatus.BAD_REQUEST);
                 }
             }
         } catch (Exception ex) {
             log.error("{}", ex);
             ex.printStackTrace();
         }
-        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, null, HttpStatus.INTERNAL_SERVER_ERROR);
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // GET ALL USERS METHOD IMPLEMENTATION
     @Override
     public ResponseEntity<String> getAllUsers() {
         try {
+            // Check admin token
             if (jwtFilter.isAdmin()) {
-                List<User> user=  userRepo.getAllUser();
+                List<User> user = userRepo.getAllUser();
                 return CafeUtils.getResponseEntity(200, true, CafeConstants.DATA_FOUND, user, HttpStatus.OK);
             } else {
-                return CafeUtils.getResponseEntity(401, false, CafeConstants.NOT_AUTHORIZED, new ArrayList<>(), HttpStatus.UNAUTHORIZED);
+                return CafeUtils.getResponseEntity(401, false, CafeConstants.UNAUTHORIZED_ACCESS, new ArrayList<>(), HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // UPDATE USER STATUS FOR ADMIN
+    @Override
+    public ResponseEntity<String> updateUserStatus(Map<String, Boolean> requestMap, Long id) {
+        try {
+            // Check admin token
+            if (jwtFilter.isAdmin()) {
+                // Check user in db
+                Optional<User> optionalUser = userRepo.findById(Integer.parseInt(id.toString()));
+
+                if (!optionalUser.isEmpty()) {
+
+                    userRepo.updateStatus(requestMap.get("status"), id);
+
+                    optionalUser = userRepo.findById(Integer.parseInt(id.toString()));
+
+                    return CafeUtils.getResponseEntity(200, true, CafeConstants.USER_STATUS_UPDATE_SUCCESS, optionalUser, HttpStatus.OK);
+                } else {
+                    return CafeUtils.getResponseEntity(404, false, CafeConstants.USERID_NOT_EXIST, new ArrayList<>(), HttpStatus.NOT_FOUND);
+                }
+            } else {
+                return CafeUtils.getResponseEntity(401, false, CafeConstants.UNAUTHORIZED_ACCESS, new ArrayList<>(), HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
 }

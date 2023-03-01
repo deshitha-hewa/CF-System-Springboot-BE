@@ -30,28 +30,41 @@ public class UserController implements UserRoute {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG,null, HttpStatus.INTERNAL_SERVER_ERROR);
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // LOGIN CONTROLLER
     @Override
     public ResponseEntity<String> login(Map<String, String> requestMap) {
-        try{
+        try {
             return userService.login(requestMap);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG,null, HttpStatus.INTERNAL_SERVER_ERROR);
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // GET ALL USERS
     @Override
     public ResponseEntity getAllUsers() {
-        try{
+        try {
             return userService.getAllUsers();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG,null, HttpStatus.INTERNAL_SERVER_ERROR);
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    // UPDATE USER STATUS
+    @Override
+    public ResponseEntity<String> updateUserStatus(Map<String, Boolean> requestMap, Long id) {
+        try {
+            return userService.updateUserStatus(requestMap, id);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 

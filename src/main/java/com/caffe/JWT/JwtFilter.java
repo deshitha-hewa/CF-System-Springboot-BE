@@ -26,50 +26,50 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private CustomerUserDetailsService service;
 
-    Claims claims=null;
+    Claims claims = null;
 
-    private String userName=null;
+    private String userName = null;
 
     // Header token validation
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
 
-        if(httpServletRequest.getServletPath().matches(("/user/login | /user/sigup | /user/forgotPassword"))){
-            filterChain.doFilter(httpServletRequest,httpServletResponse);
-        }else {
+        if (httpServletRequest.getServletPath().matches(("/user/login | /user/sigup | /user/forgotPassword"))) {
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
+        } else {
 
             String authorizationHeader = httpServletRequest.getHeader("Authorization");
-            String token=null;
+            String token = null;
 
-            if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
-                token =authorizationHeader.substring(7);
-                userName= jwtUtil.extractUsername(token);
-                claims= jwtUtil.extractAllClaims(token);
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                token = authorizationHeader.substring(7);
+                userName = jwtUtil.extractUsername(token);
+                claims = jwtUtil.extractAllClaims(token);
             }
 
-            if(userName !=null && SecurityContextHolder.getContext().getAuthentication()==null){
-                UserDetails userDetails= service.loadUserByUsername(userName);
-                if(jwtUtil.validateToken(token,userDetails)){
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken=new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+            if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = service.loadUserByUsername(userName);
+                if (jwtUtil.validateToken(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
             }
-            filterChain.doFilter(httpServletRequest,httpServletResponse);
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
         }
     }
 
     // Check user role is admin
-    public boolean isAdmin(){
+    public boolean isAdmin() {
         return "admin".equalsIgnoreCase((String) claims.get("role"));
     }
 
     // Check user role is user
-    public boolean isUser(){
+    public boolean isUser() {
         return "user".equalsIgnoreCase((String) claims.get("role"));
     }
 
-    public String getCurrentUser(){
+    public String getCurrentUser() {
         return userName;
     }
 }

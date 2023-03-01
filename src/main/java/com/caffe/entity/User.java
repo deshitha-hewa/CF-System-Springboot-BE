@@ -29,11 +29,11 @@ public class User implements Serializable {
     private Integer id;
 
     @NotBlank(message = "User name must no be null")
-    @Size(min=3,message = "User name at least 3 characters")
+    @Size(min = 3, message = "User name at least 3 characters")
     private String name;
 
     @NotBlank(message = "Contact Number must no be null")
-    @Size(min=10,message = "Contact Number at least 10 characters")
+    @Size(min = 10, message = "Contact Number at least 10 characters")
     private String contactNumber;
 
     @NotBlank(message = "Email must no be null")
@@ -44,11 +44,11 @@ public class User implements Serializable {
     @JsonIgnore
     private String password;
 
-    @NotBlank(message = "User status must no be null")
-    private String status="true";
+    @NotNull(message = "User status must no be null")
+    private Boolean status = false;
 
-    @Column(name="user_role")
-    private String role="user";
+    @Column(name = "user_role")
+    private String role = "user";
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
