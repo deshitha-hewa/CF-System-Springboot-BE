@@ -28,4 +28,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query(value = "UPDATE User SET status=?1 WHERE id=?2", nativeQuery = true)
     void updateStatus(@Param("status") Boolean status, @Param("id") Long id);
+
+
+    // Get all admin
+    @Query(value = "SELECT email FROM User WHERE user_role='admin'", nativeQuery = true)
+    List<String> getAllAdmin();
 }

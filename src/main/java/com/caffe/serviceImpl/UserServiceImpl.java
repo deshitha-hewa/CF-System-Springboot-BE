@@ -8,6 +8,7 @@ import com.caffe.entity.User;
 import com.caffe.repository.UserRepository;
 import com.caffe.service.UserService;
 import com.caffe.utils.CafeUtils;
+import com.caffe.utils.EmailUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    EmailUtils emailUtils;
 
     // SIGNUP METHOD IMPLEMENTATION
     @Override
@@ -132,6 +136,9 @@ public class UserServiceImpl implements UserService {
 
                     optionalUser = userRepo.findById(Integer.parseInt(id.toString()));
 
+                    // Send email
+                    sendEmailToAllAdmin(requestMap.get("status"), optionalUser.get().getEmail(), userRepo.getAllAdmin());
+
                     return CafeUtils.getResponseEntity(200, true, CafeConstants.USER_STATUS_UPDATE_SUCCESS, optionalUser, HttpStatus.OK);
                 } else {
                     return CafeUtils.getResponseEntity(404, false, CafeConstants.USERID_NOT_EXIST, new ArrayList<>(), HttpStatus.NOT_FOUND);
@@ -144,5 +151,17 @@ public class UserServiceImpl implements UserService {
         }
         return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 
+    }
+
+    // Send mail to all admin
+    private void sendEmailToAllAdmin(Boolean status, String userEmail, List<String> allAdmin) {
+        // Remove current user
+        allAdmin.remove(jwtFilter.getCurrentUser());
+
+        if (status != null && status.equals(true)) {
+            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account approved", "USER:- " + userEmail + "\n is approved by \nADMIN: " + jwtFilter.getCurrentUser(), allAdmin);
+        } else {
+            emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account disabled", "USER:- " + userEmail + "\n is disabled by \nADMIN: " + jwtFilter.getCurrentUser(), allAdmin);
+        }
     }
 }
