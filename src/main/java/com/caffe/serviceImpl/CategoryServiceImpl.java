@@ -106,4 +106,25 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    // DELETE CATEGORY
+    @Override
+    public ResponseEntity<String> deleteCategory(Integer id) {
+        try {
+            if(jwtFilter.isAdmin()){
+                Optional optional=categoryRepo.findById(id);
+                if(!optional.isEmpty()){
+                    categoryRepo.deleteById(id);
+                    return CafeUtils.getResponseEntity(200, true, CafeConstants.CATEGORY_DELETE_SUCCESS, new ArrayList<>(), HttpStatus.OK);
+                }else {
+                    return CafeUtils.getResponseEntity(404, false, CafeConstants.CATEGORY_ID_NOT_EXIST, new ArrayList<>(), HttpStatus.NOT_FOUND);
+                }
+            }else {
+                return CafeUtils.getResponseEntity(401, false, CafeConstants.UNAUTHORIZED_ACCESS, new ArrayList<>(), HttpStatus.UNAUTHORIZED);
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
