@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
                     // log.info("Onside login {}", user);
                     // Map body with model
                     User user1 = userRepo.save(modelMapper.map(requestMap, User.class));
-                    return CafeUtils.getResponseEntity(200, true, CafeConstants.REG_SUCCESS, user1, HttpStatus.OK);
+                    return CafeUtils.getResponseEntity(200, true, CafeConstants.USER_REG_SUCCESS, user1, HttpStatus.OK);
                 } else {
                     return CafeUtils.getResponseEntity(401, false, CafeConstants.EMAIL_EXIST, new ArrayList<>(), HttpStatus.BAD_REQUEST);
                 }

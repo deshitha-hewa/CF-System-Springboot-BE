@@ -5,7 +5,7 @@ package com.caffe.constants;
 public class CafeConstants {
     public static final String SOMETHING_WENT_WRONG="Something Went Wrong";
     public static final String INVALID_DATA="Invalid Data";
-    public static final String REG_SUCCESS="Successfully Registered";
+    public static final String USER_REG_SUCCESS="User registered successfully";
     public static final String EMAIL_EXIST="Email already exist";
     public static final String WAIT_ADMIN_APPROVAL="Wait for admin approval";
     public static final String UNAUTHORIZED_ACCESS="Unauthorized access";
@@ -16,4 +16,5 @@ public class CafeConstants {
     public static final String OLD_PASSWORD_INCORRECT="Your old password was entered incorrectly. Please try again";
     public static final String PASSWORD_UPDATE_SUCCESS="Password changed successfully";
     public static final String CHECK_EMAIL_CREDENTIALS="Check your email for credentials";
+    public static final String CATEGORY_CREATE_SUCCESS="Category created successfully";
 }
