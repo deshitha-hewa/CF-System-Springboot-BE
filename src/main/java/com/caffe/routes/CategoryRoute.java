@@ -18,4 +18,7 @@ public interface CategoryRoute {
     @GetMapping(path = "get")
     ResponseEntity<String> getAllCategory(@RequestParam(required= false) boolean filterValue);
 
+    // UPDATE CATEGORY
+    @PutMapping(path = "/update/{id}")
+    ResponseEntity<String> updateCategory(@RequestBody(required = true) Map<String,String> requestMap, @PathVariable Integer id);
 }

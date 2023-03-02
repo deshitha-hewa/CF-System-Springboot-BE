@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -78,5 +79,31 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 
+    }
+
+    // CATEGORY UPDATE
+    @Override
+    public ResponseEntity<String> updateCategory(Map<String, String> requestMap,Integer id) {
+        try {
+            if(jwtFilter.isAdmin()){
+                requestMap.put("id", id.toString());
+                if(validateCategoryMap(requestMap,true)){
+                    Optional optional=categoryRepo.findById(id);
+
+                    if(!optional.isEmpty()){
+                       Category category= categoryRepo.save(modelMapper.map(requestMap,Category.class));
+                        return CafeUtils.getResponseEntity(200, true, CafeConstants.CATEGORY_UPDATE_SUCCESS, category, HttpStatus.OK);
+                    }else {
+                        return CafeUtils.getResponseEntity(404, false, CafeConstants.CATEGORY_ID_NOT_EXIST, new ArrayList<>(), HttpStatus.NOT_FOUND);
+                    }
+                }
+                return CafeUtils.getResponseEntity(400, false, CafeConstants.DATA_NOT_FOUND, new ArrayList<>(), HttpStatus.BAD_REQUEST);
+            }else {
+                return CafeUtils.getResponseEntity(401, false, CafeConstants.UNAUTHORIZED_ACCESS, new ArrayList<>(), HttpStatus.UNAUTHORIZED);
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

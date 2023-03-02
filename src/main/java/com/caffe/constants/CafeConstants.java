@@ -17,4 +17,6 @@ public class CafeConstants {
     public static final String PASSWORD_UPDATE_SUCCESS="Password changed successfully";
     public static final String CHECK_EMAIL_CREDENTIALS="Check your email for credentials";
     public static final String CATEGORY_CREATE_SUCCESS="Category created successfully";
+    public static final String CATEGORY_ID_NOT_EXIST="Category id doesn't exist";
+    public static final String CATEGORY_UPDATE_SUCCESS="Category updated successfully";
 }
