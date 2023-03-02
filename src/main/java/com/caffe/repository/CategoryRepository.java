@@ -12,5 +12,5 @@ public interface CategoryRepository extends JpaRepository<Category,Integer> {
 
     // Get all category at least 1 product
     @Query(value = "SELECT * FROM Category", nativeQuery = true)
-    List<String> getAllCategory();
+    List<Category> getAllCategory();
 }

@@ -30,4 +30,15 @@ public class CategoryController implements CategoryRoute {
         }
         return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    // GET ALL CATEGORY
+    @Override
+    public ResponseEntity<String> getAllCategory(boolean filterValue) {
+        try {
+            return categoryService.getAllCategory(filterValue);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(500, false, CafeConstants.SOMETHING_WENT_WRONG, new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
