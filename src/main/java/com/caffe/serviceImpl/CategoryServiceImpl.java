@@ -42,6 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
                     Category category = categoryRepo.save(modelMapper.map(requestMap, Category.class));
                     return CafeUtils.getResponseEntity(200, true, CafeConstants.CATEGORY_CREATE_SUCCESS, category, HttpStatus.OK);
                 }
+                return CafeUtils.getResponseEntity(400, false, CafeConstants.INVALID_DATA, new ArrayList<>(), HttpStatus.BAD_REQUEST);
             } else {
                 return CafeUtils.getResponseEntity(401, false, CafeConstants.UNAUTHORIZED_ACCESS, new ArrayList<>(), HttpStatus.UNAUTHORIZED);
             }

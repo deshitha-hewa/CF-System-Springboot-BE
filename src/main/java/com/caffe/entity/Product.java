@@ -39,7 +39,7 @@ public class Product implements Serializable {
 
     @NotNull(message = "Product status must no be null")
     private String status;
-    
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private Timestamp createdAt;
