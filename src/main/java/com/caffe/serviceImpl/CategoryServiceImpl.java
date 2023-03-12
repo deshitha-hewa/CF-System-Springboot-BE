@@ -72,9 +72,11 @@ public class CategoryServiceImpl implements CategoryService {
                 log.info("Inside if");
                 List<Category> categoryList= categoryRepo.getAllCategory();
                 return CafeUtils.getResponseEntity(200, true, CafeConstants.DATA_FOUND, categoryList, HttpStatus.OK);
+            }else {
+                List<Category> categoryList2= categoryRepo.findAll();
+                return CafeUtils.getResponseEntity(200, true, CafeConstants.DATA_FOUND, categoryList2, HttpStatus.OK);
             }
-            List<Category> categoryList2= categoryRepo.getAllCategory();
-            return CafeUtils.getResponseEntity(200, true, CafeConstants.DATA_FOUND, categoryList2, HttpStatus.OK);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -11,6 +11,6 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<Category,Integer> {
 
     // Get all category at least 1 product
-    @Query(value = "SELECT * FROM Category", nativeQuery = true)
+    @Query(value = "SELECT * FROM Category WHERE id IN (SELECT category_fk FROM Product WHERE status='true')", nativeQuery = true)
     List<Category> getAllCategory();
 }
